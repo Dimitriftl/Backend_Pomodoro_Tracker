@@ -1,0 +1,13 @@
+{
+  "name": "backend_pomodoro_tracker",
+  "version": "0.0.0",
+  "description": "the backend for the pomodoro tracker application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
