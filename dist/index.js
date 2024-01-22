@@ -1,8 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("./app"));
-const server_1 = __importDefault(require("./server"));
-(0, server_1.default)((0, app_1.default)());
+const express = require('express');
+const { initializeRoutes } = require('./utils/initializeRoutes');
+require('dotenv').config();
+const app = express();
+require('./db/connect')();
+initializeRoutes(app);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.clear();
+    console.log(`Listening on port ${port}`);
+});
