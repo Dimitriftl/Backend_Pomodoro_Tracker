@@ -17,15 +17,6 @@ module.exports = {
     }
   },
 
-  async getAllUsers(req: any, res: any) {
-    try {
-      const users = await userModel.find();
-      return res.status(200).json({ ok: true, data: users });
-    } catch (error) {
-      return res.status(500).json({ ok: false, data: error });
-    }
-  },
-
   async logIn(req: any, res: any) {
     const schema = Joi.object({
       email: Joi.string().required(),
@@ -57,27 +48,7 @@ module.exports = {
     return res.json({ ok: true, data: { token, user } });
   },
 
-  async addFav(req: any, res: any) {
-    const schema = Joi.object({
-      fav: Joi.string().required(),
-    });
-    const { error } = schema.validate(req.body);
-    if (error)
-      return res.status(400).send({ ok: false, msg: error.details[0].message });
-    const { id } = req.user;
-    const { fav } = req.body;
-
-    try {
-      const user = await userModel.findByIdAndUpdate(
-        id,
-        { $push: { favs: fav } },
-        { new: true }
-      );
-      return res.status(200).json({ ok: true, data: user });
-    } catch (error) {
-      return res.status(500).json({ ok: false, data: error });
-    }
-  },
+ 
 
   async deleteUser(req: any, res: any) {
     const { id } = req.user;
@@ -89,20 +60,7 @@ module.exports = {
     }
   },
 
-  async deleteFav(req: any, res: any) {
-    const { id } = req.user;
-    const { fav } = req.body;
-    try {
-      const user = await userModel.findByIdAndUpdate(
-        id,
-        { $pull: { favs: fav } },
-        { new: true }
-      );
-      return res.status(200).json({ ok: true, data: user });
-    } catch (error) {
-      return res.status(500).json({ ok: false, data: error });
-    }
-  },
+
 
   async getFavs(req: any, res: any) {
     const { id } = req.user;

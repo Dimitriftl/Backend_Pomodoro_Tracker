@@ -3,9 +3,6 @@ const Joi = require("joi");
 const validateUser = (req: any, res: any, next: any) => {
   const schema = Joi.object({
     name: Joi.string().regex(new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+$")).required(),
-    surname: Joi.string()
-      .regex(new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+$"))
-      .required(),
     email: Joi.string().email().required(),
     password: Joi.string()
       .regex(
@@ -14,6 +11,7 @@ const validateUser = (req: any, res: any, next: any) => {
         )
       )
       .required(),
+    confirmedPassword: Joi.string(),
     role: Joi.string().valid("admin", "user").required(),
   });
   const { error } = schema.validate(req.body);

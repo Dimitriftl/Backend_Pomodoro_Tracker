@@ -4,12 +4,9 @@ const {
   signUp,
   getAllUsers,
   logIn,
-  addFav,
   deleteUser,
-  deleteFav,
-  getFavs,
   getUser,
-  updateUser
+  updateUser,
 } = require("./users.controller");
 const { authentification } = require("../middlewares/authentification");
 
@@ -19,5 +16,9 @@ const router = express.Router();
 router.route("").get(authentification, getAllUsers);
 router.route("/signup").post(validateUser, signUp);
 router.route("/login").post(logIn);
-router.route("/user").delete(authentification, deleteUser).get(authentification, getUser).put(authentification, updateUser);
+router
+  .route("/user")
+  .delete(authentification, deleteUser)
+  .get(authentification, getUser)
+  .put(authentification, updateUser);
 module.exports = router;
