@@ -29,17 +29,6 @@ module.exports = {
             }
         });
     },
-    getAllUsers(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const users = yield userModel.find();
-                return res.status(200).json({ ok: true, data: users });
-            }
-            catch (error) {
-                return res.status(500).json({ ok: false, data: error });
-            }
-        });
-    },
     logIn(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const schema = Joi.object({
@@ -65,43 +54,11 @@ module.exports = {
             return res.json({ ok: true, data: { token, user } });
         });
     },
-    addFav(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const schema = Joi.object({
-                fav: Joi.string().required(),
-            });
-            const { error } = schema.validate(req.body);
-            if (error)
-                return res.status(400).send({ ok: false, msg: error.details[0].message });
-            const { id } = req.user;
-            const { fav } = req.body;
-            try {
-                const user = yield userModel.findByIdAndUpdate(id, { $push: { favs: fav } }, { new: true });
-                return res.status(200).json({ ok: true, data: user });
-            }
-            catch (error) {
-                return res.status(500).json({ ok: false, data: error });
-            }
-        });
-    },
     deleteUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.user;
             try {
                 const user = yield userModel.findByIdAndDelete(id);
-                return res.status(200).json({ ok: true, data: user });
-            }
-            catch (error) {
-                return res.status(500).json({ ok: false, data: error });
-            }
-        });
-    },
-    deleteFav(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.user;
-            const { fav } = req.body;
-            try {
-                const user = yield userModel.findByIdAndUpdate(id, { $pull: { favs: fav } }, { new: true });
                 return res.status(200).json({ ok: true, data: user });
             }
             catch (error) {
