@@ -40,7 +40,7 @@ module.exports = {
         msg: "Invalid email",
       });
 
-      // check if the password is correct with bcrypt wich is the labrary we used to hash the password
+    // check if the password is correct with bcrypt wich is the labrary we used to hash the password
     const isMatch = await bcrypt.compare(req.body.password, user.password);
 
     if (!isMatch)
@@ -54,8 +54,6 @@ module.exports = {
     return res.json({ ok: true, data: { token, user } });
   },
 
- 
-
   async deleteUser(req: any, res: any) {
     const { id } = req.user;
     try {
@@ -65,8 +63,6 @@ module.exports = {
       return res.status(500).json({ ok: false, data: error });
     }
   },
-
-
 
   async getFavs(req: any, res: any) {
     const { id } = req.user;
@@ -98,6 +94,7 @@ module.exports = {
       req.body.password = hash;
     }
     try {
+      // new: true allows to return the updated user otherwise it will return the user before the update
       const user = await userModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
