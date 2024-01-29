@@ -10,6 +10,7 @@ module.exports = {
     const hash = bcrypt.hashSync(password, salt);
     req.body.password = hash;
     try {
+      // create a user in the database with user model
       const user = await userModel.create(req.body);
       return res.status(201).json({ ok: true, data: user });
     } catch (error) {
@@ -18,16 +19,19 @@ module.exports = {
   },
 
   async logIn(req: any, res: any) {
+    // joi allows to validate the data that we receive in the body of a request and if it's not valid it will send an error
     const schema = Joi.object({
       email: Joi.string().required(),
       password: Joi.string().min(8).required(),
     });
 
+    // validate the data that we receive in the body of a request
     const { error } = schema.validate(req.body);
     if (error)
       return res.status(400).send({ ok: false, msg: error.details[0].message });
     console.log(req.session);
 
+    // check if the user exists in the database
     let user = await userModel.findOne({ email: req.body.email });
 
     if (!user)
@@ -36,11 +40,13 @@ module.exports = {
         msg: "Invalid email",
       });
 
+      // check if the password is correct with bcrypt wich is the labrary we used to hash the password
     const isMatch = await bcrypt.compare(req.body.password, user.password);
 
     if (!isMatch)
       return res.status(400).send({ ok: false, msg: "Invalid password" });
 
+    // create a token with jwt wich is the library we used to create the token and we pass the id of the user and the secret key that we have in the .env file and we set the expiration time to 1 day and we send the token and the user in the response
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });

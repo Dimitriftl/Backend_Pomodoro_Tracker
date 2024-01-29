@@ -7,6 +7,7 @@ const authentification = (req: any, res: any, next: any) => {
     return res.status(401).send({ ok: false, error: "No token provided" });
   }
   console.log(authorization);
+  // used to get the token from the header because the token is sent like this: Bearer "token"
   const token = authorization.split(" ")[1];
   jwt.verify(token, process.env.JWT_SECRET, (err: any, decoded: any) => {
     if (err) {
