@@ -14,6 +14,9 @@ const router = express.Router();
 // // middleware validate user
 router.route("/signup").post(validateUser, signUp);
 router.route("/login").post(logIn);
+router.route("/").get((req: any, res: any) => {
+  res.send("Hello World!");
+}); // test route
 router
   .route("/user")
   .delete(authentification, deleteUser)

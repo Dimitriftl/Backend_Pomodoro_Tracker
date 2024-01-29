@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 module.exports = () => __awaiter(void 0, void 0, void 0, function* () {
-    const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mzvon6w.mongodb.net/?retryWrites=true&w=majority`;
+    const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mzvon6w.mongodb.net/pomodoro_tracker?retryWrites=true&w=majority`;
     try {
         yield mongoose.connect(uri);
-        console.log('Connected to DB');
+        console.log("Connected to DB");
     }
     catch (error) {
         console.log(error);
