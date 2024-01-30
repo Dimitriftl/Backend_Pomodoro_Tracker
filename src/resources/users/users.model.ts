@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: { type: String, enum: ["admin", "user"] },
+  tasks: []
 });
 
 const User = mongoose.model("Users", userSchema);
