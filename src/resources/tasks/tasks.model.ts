@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const taskShema = new Schema({
-    userId: String,
-	name: String,
-	description: String,
-	numberOfPomodoroSet: Number ,
-    numberOfPomodoroDone : Number,
-	timeSpend: Number,
-	taskDone: Boolean,
-	creationDate: Date,
-	displayTask: Boolean
+  id: String,
+  name: String,
+  description: String,
+  numberOfPomodoroSet: Number,
+  numberOfPomodoroDone: Number,
+  timeSpend: Number,
+  taskDone: Boolean,
+  creationDate: { type: Date, default: Date.now },
+  displayTask: Boolean,
 });
 
 const Task = mongoose.model("Tasks", taskShema);

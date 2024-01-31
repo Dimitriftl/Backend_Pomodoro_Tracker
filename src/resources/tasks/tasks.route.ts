@@ -7,6 +7,8 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(validateTask, authentification, createTask)
   .get(authentification, getTasks)
+  .post(authentification, validateTask, createTask)
   .put(authentification, updateTask);
+
+module.exports = router;

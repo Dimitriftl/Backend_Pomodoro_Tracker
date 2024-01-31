@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const taskModel = require("../tasks/tasks.model");
 
 // create a shema with mongoose schema allows to create a model and whatever we receive in the body of a request mongoose will only take the fields that are in the schema and ignore the rest
 
@@ -7,7 +8,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: { type: String, enum: ["admin", "user"] },
-  tasks: []
+  tasks: [],
 });
 
 const User = mongoose.model("Users", userSchema);

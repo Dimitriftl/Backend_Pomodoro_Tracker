@@ -13,7 +13,11 @@ const mongoose = require("mongoose");
 module.exports = () => __awaiter(void 0, void 0, void 0, function* () {
     const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.mzvon6w.mongodb.net/pomodoro_tracker?retryWrites=true&w=majority`;
     try {
-        yield mongoose.connect(uri);
+        yield mongoose.connect(uri, {
+            dbName: "Pomodoro_tracker",
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log("Connected to DB");
     }
     catch (error) {

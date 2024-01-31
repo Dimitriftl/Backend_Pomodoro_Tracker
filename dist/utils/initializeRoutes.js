@@ -9,6 +9,6 @@ const initializeRoutes = (app) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use("/api/users", usersRoute);
-    // app.use("/api/tasks", tasksRoute);
+    app.use("/api/tasks", tasksRoute);
 };
 module.exports = { initializeRoutes };
