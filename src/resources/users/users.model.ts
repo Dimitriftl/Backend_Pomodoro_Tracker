@@ -8,7 +8,24 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   role: { type: String, enum: ["admin", "user"] },
-  tasks: [],
+  tasks: [
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        index: true,
+        required: true,
+        auto: true,
+      },
+      name: String,
+      description: String,
+      numberOfPomodoroSet: Number,
+      numberOfPomodoroDone: Number,
+      timeSpend: Number,
+      taskDone: Boolean,
+      creationDate: { type: Date, default: Date.now },
+      displayTask: Boolean,
+    },
+  ],
 });
 
 const User = mongoose.model("Users", userSchema);

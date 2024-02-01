@@ -48,7 +48,7 @@ module.exports = {
 
     // create a token with jwt wich is the library we used to create the token and we pass the id of the user and the secret key that we have in the .env file and we set the expiration time to 1 day and we send the token and the user in the response
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "7d",
     });
 
     return res.json({ ok: true, data: { token, user } });

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const taskShema = new Schema({
-  id: String,
+  _id: String,
   name: String,
   description: String,
   numberOfPomodoroSet: Number,
@@ -11,6 +11,7 @@ const taskShema = new Schema({
   taskDone: Boolean,
   creationDate: { type: Date, default: Date.now },
   displayTask: Boolean,
+  status: { String,  enum: ["active", "delete"] },
 });
 
 const Task = mongoose.model("Tasks", taskShema);

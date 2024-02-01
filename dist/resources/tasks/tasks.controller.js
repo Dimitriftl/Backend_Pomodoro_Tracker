@@ -17,13 +17,43 @@ module.exports = {
         return __awaiter(this, void 0, void 0, function* () {
             const { userId } = req.body;
             try {
-                const updatedUser = yield userModel.findByIdAndUpdate(userId, { $push: Object.assign({ tasks: uuidv4() }, req.body) }, { new: true } // Pour obtenir le document mis à jour
+                const createUser = yield userModel.findByIdAndUpdate(userId, { $push: { tasks: Object.assign({}, req.body) } }, { new: true } // Pour obtenir le document mis à jour
                 );
-                res.status(201).json(updatedUser);
+                res.status(201).json(createUser);
             }
             catch (error) {
                 console.log(error);
                 return res.status(500).json({ ok: false, data: error });
+            }
+        });
+    },
+    updateTask(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { taskId } = req.body;
+            const { id } = req.user;
+            try {
+                // Rechercher l'utilisateur par son ID
+                const user = yield userModel.findById(id);
+                // Rechercher la tâche par son ID dans le tableau de tâches de l'utilisateur
+                const taskToUpdate = user.tasks.id(taskId);
+                // Mettre à jour les propriétés de la tâche
+                taskToUpdate.name = req.body.name || taskToUpdate.name;
+                taskToUpdate.description =
+                    req.body.description || taskToUpdate.description;
+                taskToUpdate.numberOfPomodoroSet =
+                    req.body.numberOfPomodoroSet || taskToUpdate.numberOfPomodoroSet;
+                taskToUpdate.taskDone = req.body.taskDone || taskToUpdate.taskDone;
+                taskToUpdate.displayTask =
+                    req.body.displayTask || taskToUpdate.displayTask;
+                // Enregistrer les modifications dans la base de données
+                yield user.save();
+                res.status(200).json({ message: "Tâche mise à jour avec succès" });
+            }
+            catch (error) {
+                console.error(error);
+                res
+                    .status(500)
+                    .json({ error: "Erreur lors de la mise à jour de la tâche" });
             }
         });
     },
@@ -37,18 +67,6 @@ module.exports = {
             catch (error) {
                 return res.status(500).json({ ok: false, data: error });
             }
-        });
-    },
-    updateTask(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            // const { userId, id } = req.body;
-            // const user = await userModel.findById(userId);
-            // const task = await taskModel.findByIdAndUpdate(id)
-            // try {
-            //     const task = await taskModel.findByIdAndUpdate(id, req.body, {
-            //         new: true
-            //     })
-            // }
         });
     },
 };
