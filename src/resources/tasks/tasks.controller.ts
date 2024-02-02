@@ -20,10 +20,10 @@ module.exports = {
   },
 
   async getTasks(req: any, res: any) {
-    const { userId } = req.body;
+    const { id } = req.user;
 
     try {
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(id);
       return res.status(200).json({ ok: true, data: user.tasks });
     } catch (error) {
       return res.status(500).json({ ok: false, data: error });
@@ -78,7 +78,7 @@ module.exports = {
 
         // update the task with the new data
         // .$ is the positional operator, it will update the first element that matches the query
-        { $set: { "tasks.$.status": "deleted"} },
+        { $set: { "tasks.$.status": "deleted" } },
 
         // return the updated document
         { new: true }
