@@ -4,15 +4,15 @@ const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   async createTask(req: any, res: any) {
-    const { userId } = req.body;
+    const { id } = req.user;
 
     try {
-      const createUser = await userModel.findByIdAndUpdate(
-        userId,
+      const task = await userModel.findByIdAndUpdate(
+        id,
         { $push: { tasks: { ...req.body } } },
         { new: true } // Pour obtenir le document mis à jour
       );
-      res.status(201).json(createUser);
+      res.status(201).json(task.tasks[task.tasks.length - 1]);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ ok: false, data: error });
@@ -24,7 +24,10 @@ module.exports = {
 
     try {
       const user = await userModel.findById(id);
-      return res.status(200).json({ ok: true, data: user.tasks });
+      return res.status(200).json({
+        ok: true,
+        data: user.tasks.filter((task: any) => task.status !== "deleted"),
+      });
     } catch (error) {
       return res.status(500).json({ ok: false, data: error });
     }

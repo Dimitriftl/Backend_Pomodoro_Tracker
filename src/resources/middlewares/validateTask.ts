@@ -2,15 +2,13 @@ const Joi = require("joi");
 
 const validateTask = (req: any, res: any, next: any) => {
   const schema = Joi.object({
-    userId: Joi.string().required(),
-    name: Joi.string().max(30).required(),
-    description: Joi.string().max(120),
+    taskName: Joi.string().max(40).required(),
+    description: Joi.string().max(200),
     numberOfPomodoroSet: Joi.number().required(),
     numberOfPomodoroDone: Joi.number(),
     timeSpend: Joi.number(),
-    taskDone: Joi.boolean().required(),
-    displayTask: Joi.boolean().required(),
-    
+    taskDone: Joi.boolean(),
+    displayTask: Joi.boolean(),
   });
   const { error } = schema.validate(req.body);
   if (error) {

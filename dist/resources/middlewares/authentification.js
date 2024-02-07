@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
 const authentification = (req, res, next) => {
     const authorization = req.headers.authorization;
+    console.log(authorization, "authorization");
     if (!authorization) {
         return res.status(401).send({ ok: false, error: "No token provided" });
     }

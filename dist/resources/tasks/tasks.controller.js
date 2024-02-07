@@ -15,11 +15,11 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = {
     createTask(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userId } = req.body;
+            const { id } = req.user;
             try {
-                const createUser = yield userModel.findByIdAndUpdate(userId, { $push: { tasks: Object.assign({}, req.body) } }, { new: true } // Pour obtenir le document mis à jour
+                const task = yield userModel.findByIdAndUpdate(id, { $push: { tasks: Object.assign({}, req.body) } }, { new: true } // Pour obtenir le document mis à jour
                 );
-                res.status(201).json(createUser);
+                res.status(201).json(task.tasks[task.tasks.length - 1]);
             }
             catch (error) {
                 console.log(error);
@@ -27,45 +27,77 @@ module.exports = {
             }
         });
     },
-    updateTask(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { taskId } = req.body;
-            const { id } = req.user;
-            try {
-                // Rechercher l'utilisateur par son ID
-                const user = yield userModel.findById(id);
-                // Rechercher la tâche par son ID dans le tableau de tâches de l'utilisateur
-                const taskToUpdate = user.tasks.id(taskId);
-                // Mettre à jour les propriétés de la tâche
-                taskToUpdate.name = req.body.name || taskToUpdate.name;
-                taskToUpdate.description =
-                    req.body.description || taskToUpdate.description;
-                taskToUpdate.numberOfPomodoroSet =
-                    req.body.numberOfPomodoroSet || taskToUpdate.numberOfPomodoroSet;
-                taskToUpdate.taskDone = req.body.taskDone || taskToUpdate.taskDone;
-                taskToUpdate.displayTask =
-                    req.body.displayTask || taskToUpdate.displayTask;
-                // Enregistrer les modifications dans la base de données
-                yield user.save();
-                res.status(200).json({ message: "Tâche mise à jour avec succès" });
-            }
-            catch (error) {
-                console.error(error);
-                res
-                    .status(500)
-                    .json({ error: "Erreur lors de la mise à jour de la tâche" });
-            }
-        });
-    },
     getTasks(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { userId } = req.body;
+            const { id } = req.user;
             try {
-                const user = yield userModel.findById(userId);
-                return res.status(200).json({ ok: true, data: user.tasks });
+                const user = yield userModel.findById(id);
+                return res.status(200).json({
+                    ok: true,
+                    data: user.tasks.filter((task) => task.status !== "deleted"),
+                });
             }
             catch (error) {
                 return res.status(500).json({ ok: false, data: error });
+            }
+        });
+    },
+    getTask(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { _id } = req.body;
+            const { id } = req.user;
+            try {
+                const user = yield userModel.findById(id);
+                const task = user.tasks.find((task) => task._id == _id);
+                return res.status(200).json({ ok: true, data: task });
+            }
+            catch (error) {
+                return res.status(500).json({ ok: false, data: error });
+            }
+        });
+    },
+    updateTask(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // validateTask middleware will validate the body of the request
+            const { _id } = req.body;
+            const { id } = req.user;
+            try {
+                const updatedTask = yield userModel.findOneAndUpdate(
+                // filter all tasks of the user with the id and the task ID
+                { _id: id, "tasks._id": _id }, 
+                // update the task with the new data
+                // .$ is the positional operator, it will update the first element that matches the query
+                { $set: { "tasks.$": req.body } }, 
+                // return the updated document
+                { new: true });
+                console.log("user model => ", updatedTask);
+                res.status(200).json({ ok: true, message: "task updated successfully" });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send("Erreur lors de la mise à jour de la tâche.");
+            }
+        });
+    },
+    deleteTask(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { _id } = req.body;
+            const { id } = req.user;
+            try {
+                const deleted = yield userModel.findOneAndUpdate(
+                // filter all tasks of the user with the id and the task ID
+                { _id: id, "tasks._id": _id }, 
+                // update the task with the new data
+                // .$ is the positional operator, it will update the first element that matches the query
+                { $set: { "tasks.$.status": "deleted" } }, 
+                // return the updated document
+                { new: true });
+                console.log("updatedUser => ", deleted);
+                res.status(200).json({ ok: true, message: "task deleted successfully" });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send("Erreur lors de la suppression de la tâche.");
             }
         });
     },

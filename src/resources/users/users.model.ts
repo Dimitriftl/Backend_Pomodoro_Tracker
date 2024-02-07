@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         auto: true,
       },
-      name: String,
+      taskName: String,
       description: String,
       numberOfPomodoroSet: Number,
       numberOfPomodoroDone: Number,

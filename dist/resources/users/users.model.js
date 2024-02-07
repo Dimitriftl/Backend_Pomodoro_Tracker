@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    role: { type: String, enum: ["admin", "user"] },
+    role: { type: String, enum: ["admin", "user"], default: "user" },
     tasks: [
         {
             _id: {
@@ -16,14 +16,15 @@ const userSchema = new mongoose.Schema({
                 required: true,
                 auto: true,
             },
-            name: String,
+            taskName: String,
             description: String,
             numberOfPomodoroSet: Number,
             numberOfPomodoroDone: Number,
             timeSpend: Number,
-            taskDone: Boolean,
+            taskDone: { type: Boolean, default: false },
             creationDate: { type: Date, default: Date.now },
             displayTask: Boolean,
+            status: { type: String, enum: ["active", "delete"], default: "active" },
         },
     ],
 });
