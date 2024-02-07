@@ -71,7 +71,7 @@ module.exports = {
   },
 
   async deleteTask(req: any, res: any) {
-    const { _id } = req.body;
+    const _id = req.params.id;
     const { id } = req.user;
 
     try {

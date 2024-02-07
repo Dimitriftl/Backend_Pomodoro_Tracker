@@ -15,8 +15,8 @@ router
   .route("/")
   .get(authentification, getTasks)
   .post(authentification, validateTask, createTask)
-  .put(authentification, updateTask)
-  .delete(authentification, deleteTask);
+  .put(authentification, updateTask);
+router.route("/:id").delete(authentification, deleteTask);
 router.route("/task").get(authentification, getTask);
 
 module.exports = router;
