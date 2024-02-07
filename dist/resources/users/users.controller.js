@@ -57,7 +57,15 @@ module.exports = {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
                 expiresIn: "7d",
             });
-            return res.json({ ok: true, data: { token, user } });
+            const data = {
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                    name: user.name,
+                },
+                tasks: user.tasks.filter((task) => task.status !== "deleted"),
+            };
+            return res.json({ ok: true, data: { token, data } });
         });
     },
     deleteUser(req, res) {

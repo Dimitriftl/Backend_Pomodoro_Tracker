@@ -51,7 +51,16 @@ module.exports = {
       expiresIn: "7d",
     });
 
-    return res.json({ ok: true, data: { token, user } });
+    const data = {
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+      },
+      tasks: user.tasks.filter((task: any) => task.status !== "deleted"),
+    };
+
+    return res.json({ ok: true, token, data });
   },
 
   async deleteUser(req: any, res: any) {
