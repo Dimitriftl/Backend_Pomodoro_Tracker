@@ -62,8 +62,14 @@ module.exports = {
         // return the updated document
         { new: true }
       );
-      console.log("user model => ", updatedTask);
-      res.status(200).json({ ok: true, message: "task updated successfully" });
+      const taskUpdated = updatedTask.tasks.find(
+        (task: any) => task._id == _id
+      );
+      res.status(200).json({
+        ok: true,
+        message: "task updated successfully",
+        data: taskUpdated,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send("Erreur lors de la mise à jour de la tâche.");
