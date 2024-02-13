@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
+  totalTimeSpend: { type: Number, default: 0 },
   role: { type: String, enum: ["admin", "user"], default: "user" },
   tasks: [
     {
