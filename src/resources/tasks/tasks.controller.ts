@@ -76,6 +76,75 @@ module.exports = {
     }
   },
 
+  async updateNumberOfPomodoroAndTimeSpend(req: any, res: any) {
+    const { _id, numberOfPomodoroDone, timeSpend } = req.body;
+    const { id } = req.user;
+
+    try {
+      const taskToUpdate = await userModel.findOneAndUpdate(
+        // filter all tasks of the user with the id and the task ID
+        { _id: id, "tasks._id": _id },
+
+        // update the task with the new data
+        // .$ is the positional operator, it will update the first element that matches the query
+        {
+          $set: {
+            "tasks.$.numberOfPomodoroDone": numberOfPomodoroDone,
+            "tasks.$.timeSpend": timeSpend,
+          },
+        },
+
+        // return the updated document
+        { new: true }
+      );
+
+      const taskUpdated = taskToUpdate.tasks.find(
+        (task: any) => task._id == _id
+      );
+      res.status(200).json({
+        ok: true,
+        message: "number of pomodoro done updated successfully",
+        data: taskUpdated,
+      });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send("Something went wront on number pomodoro done update.");
+    }
+  },
+
+  async updateTimeSpend(req: any, res: any) {
+    const { _id, timeSpend } = req.body;
+    const { id } = req.user;
+
+    try {
+      const taskToUpdate = await userModel.findOneAndUpdate(
+        // filter all tasks of the user with the id and the task ID
+        { _id: id, "tasks._id": _id },
+
+        // update the task with the new data
+        // .$ is the positional operator, it will update the first element that matches the query
+        { $set: { "tasks.$.timeSpend": timeSpend } },
+
+        // return the updated document
+        { new: true }
+      );
+
+      const taskUpdated = taskToUpdate.tasks.find(
+        (task: any) => task._id == _id
+      );
+      res.status(200).json({
+        ok: true,
+        message: "time spend updated successfully",
+        data: taskUpdated,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Something went wront on time spend update.");
+    }
+  },
+
   async deleteTask(req: any, res: any) {
     const _id = req.params.id;
     const { id } = req.user;
@@ -97,6 +166,29 @@ module.exports = {
     } catch (error) {
       console.error(error);
       res.status(500).send("Erreur lors de la suppression de la tâche.");
+    }
+  },
+  async gaveUpTask(req: any, res: any) {
+    const _id = req.body._id;
+    const { id } = req.user;
+
+    try {
+      const gaveUp = await userModel.findOneAndUpdate(
+        // filter all tasks of the user with the id and the task ID
+        { _id: id, "tasks._id": _id },
+
+        // update the task with the new data
+        // .$ is the positional operator, it will update the first element that matches the query
+        { $set: { "tasks.$.status": "gaveUp" } },
+
+        // return the updated document
+        { new: true }
+      );
+      console.log("updatedUser => ", gaveUp);
+      res.status(200).json({ ok: true, message: "task gave up successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Erreur lors de l'abandon de la tâche.");
     }
   },
 };

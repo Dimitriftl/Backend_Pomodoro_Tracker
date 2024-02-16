@@ -56,6 +56,8 @@ module.exports = {
         _id: user._id,
         email: user.email,
         name: user.name,
+        role: user.role,
+        totalTimeSpend: user.totalTimeSpend,
       },
       tasks: user.tasks.filter((task: any) => task.status !== "deleted"),
     };
@@ -108,6 +110,22 @@ module.exports = {
         new: true,
       });
       return res.status(200).json({ ok: true, data: user });
+    } catch (error) {
+      return res.status(500).json({ ok: false, data: error });
+    }
+  },
+  async updateUserTimeSpend(req: any, res: any) {
+    const { id } = req.user;
+    const { timeSpend } = req.body;
+    try {
+      const user = await userModel.findByIdAndUpdate(
+        id,
+        { $inc: { totalTimeSpend: timeSpend } },
+        { new: true }
+      );
+      return res
+        .status(200)
+        .json({ ok: true, data: { totalTimeSpend: user.totalTimeSpend } });
     } catch (error) {
       return res.status(500).json({ ok: false, data: error });
     }

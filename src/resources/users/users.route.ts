@@ -6,6 +6,7 @@ const {
   deleteUser,
   getUser,
   updateUser,
+  updateUserTimeSpend,
 } = require("./users.controller");
 const { authentification } = require("../middlewares/authentification");
 
@@ -22,4 +23,6 @@ router
   .delete(authentification, deleteUser)
   .get(authentification, getUser)
   .put(authentification, updateUser);
+
+router.route("/user/timespend").put(authentification, updateUserTimeSpend);
 module.exports = router;
