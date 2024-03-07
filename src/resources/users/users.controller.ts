@@ -29,7 +29,6 @@ module.exports = {
     const { error } = schema.validate(req.body);
     if (error)
       return res.status(400).send({ ok: false, msg: error.details[0].message });
-    console.log(req.session);
 
     // check if the user exists in the database
     let user = await userModel.findOne({ email: req.body.email });
@@ -95,25 +94,36 @@ module.exports = {
     }
   },
 
-  async updateUser(req: any, res: any) {
+  async updateUserPassword(req: any, res: any) {
     const { id } = req.user;
-    const { password } = req.body;
+    let { currentPassword, newPassword } = req.body;
 
-    if (password) {
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
-      req.body.password = hash;
+    let user = await userModel.findById(id);
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "current password is incorrect." });
     }
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(newPassword, salt);
+    newPassword = hash;
+
     try {
       // new: true allows to return the updated user otherwise it will return the user before the update
-      const user = await userModel.findByIdAndUpdate(id, req.body, {
-        new: true,
-      });
+      const user = await userModel.findByIdAndUpdate(
+        id,
+        { $set: { password: newPassword } },
+        { new: true }
+      );
       return res.status(200).json({ ok: true, data: user });
     } catch (error) {
       return res.status(500).json({ ok: false, data: error });
     }
   },
+
   async updateUserTimeSpend(req: any, res: any) {
     const { id } = req.user;
     const { timeSpend } = req.body;

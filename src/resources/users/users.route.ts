@@ -1,11 +1,14 @@
 const express = require("express");
-const { validateUser } = require("../middlewares/validateUser");
+const {
+  validateUser,
+  validateUserUpdatePassword,
+} = require("../middlewares/validateUser");
 const {
   signUp,
   logIn,
   deleteUser,
   getUser,
-  updateUser,
+  updateUserPassword,
   updateUserTimeSpend,
 } = require("./users.controller");
 const { authentification } = require("../middlewares/authentification");
@@ -22,7 +25,11 @@ router
   .route("/user")
   .delete(authentification, deleteUser)
   .get(authentification, getUser)
-  .put(authentification, updateUser);
+  .put(authentification, updateUserPassword);
+
+router
+  .route("/user/updatepassword")
+  .put(authentification, validateUserUpdatePassword, updateUserPassword);
 
 router.route("/user/timespend").put(authentification, updateUserTimeSpend);
 module.exports = router;
