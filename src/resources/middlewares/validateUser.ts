@@ -2,6 +2,7 @@ const Joi = require("joi");
 
 const errorMessage = {
   "string.min": `Your password should have a minimum length of 8.`,
+  "string.regex": `Your password must contain at least 1 majuscule, 1 number and 1 special character.`,
   "string.pattern.base": `Your password must contain at least 1 majuscule, 1 number and 1 special character.`,
 };
 
@@ -31,13 +32,7 @@ const validateUser = (req: any, res: any, next: any) => {
 
 const validateUserUpdatePassword = (req: any, res: any, next: any) => {
   const schema = Joi.object({
-    currentPassword: Joi.string()
-      .regex(
-        new RegExp(
-          '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*()_+{}|:"<>?/]).{8,}$'
-        )
-      )
-      .required(),
+    currentPassword: Joi.string().min(0).required(),
 
     newPassword: Joi.string()
       .min(8)

@@ -105,7 +105,7 @@ module.exports = {
     if (!isMatch) {
       return res
         .status(400)
-        .json({ ok: false, message: "current password is incorrect." });
+        .json({ ok: false, error: "current password is incorrect." });
     }
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(newPassword, salt);
@@ -120,7 +120,7 @@ module.exports = {
       );
       return res.status(200).json({ ok: true, data: user });
     } catch (error) {
-      return res.status(500).json({ ok: false, data: error });
+      return res.status(500).json({ ok: false, error: error });
     }
   },
 
