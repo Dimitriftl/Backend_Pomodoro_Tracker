@@ -74,16 +74,6 @@ module.exports = {
     }
   },
 
-  async getFavs(req: any, res: any) {
-    const { id } = req.user;
-    try {
-      const user = await userModel.findById(id);
-      return res.status(200).json({ ok: true, data: user.favs });
-    } catch (error) {
-      return res.status(500).json({ ok: false, data: error });
-    }
-  },
-
   async getUser(req: any, res: any) {
     const { id } = req.user;
     try {
@@ -128,6 +118,21 @@ module.exports = {
         { $set: { password: newPassword } },
         { new: true }
       );
+      return res.status(200).json({ ok: true, data: user });
+    } catch (error) {
+      return res.status(500).json({ ok: false, error: error });
+    }
+  },
+
+  async updateUserInformations(req: any, res: any) {
+    const { id } = req.user;
+    const data = req.body;
+
+    try {
+      // new: true allows to return the updated user otherwise it will return the user before the update
+      const user = await userModel.findByIdAndUpdate(id, data, {
+        new: true,
+      });
       return res.status(200).json({ ok: true, data: user });
     } catch (error) {
       return res.status(500).json({ ok: false, error: error });

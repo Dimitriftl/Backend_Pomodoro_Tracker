@@ -51,4 +51,20 @@ const validateUserUpdatePassword = (req: any, res: any, next: any) => {
   next();
 };
 
-module.exports = { validateUser, validateUserUpdatePassword };
+const validateUserUpdateInformations = (req: any, res: any, next: any) => {
+  const schema = Joi.object({
+    name: Joi.string().regex(new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+$")),
+    email: Joi.string().email(),
+  });
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ ok: false, error: error.details[0].message });
+  }
+  next();
+};
+
+module.exports = {
+  validateUser,
+  validateUserUpdatePassword,
+  validateUserUpdateInformations,
+};
