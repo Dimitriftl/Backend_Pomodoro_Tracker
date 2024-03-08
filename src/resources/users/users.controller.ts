@@ -101,12 +101,22 @@ module.exports = {
     let user = await userModel.findById(id);
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
+    const isEqualToPreviousPassword = await bcrypt.compare(
+      newPassword,
+      user.password
+    );
 
     if (!isMatch) {
       return res
         .status(400)
         .json({ ok: false, error: "current password is incorrect." });
+    } else if (isEqualToPreviousPassword) {
+      return res.status(400).json({
+        ok: false,
+        error: "Your new password can't be the same as the current one.",
+      });
     }
+
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(newPassword, salt);
     newPassword = hash;
