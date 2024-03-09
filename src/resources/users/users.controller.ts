@@ -5,7 +5,16 @@ const Joi = require("joi");
 
 module.exports = {
   async signUp(req: any, res: any) {
-    const { password } = req.body;
+    const { password, email } = req.body;
+    const userExist = userModel.findOne({ email: email });
+
+    if (userExist) {
+      return res.status(400).json({
+        ok: false,
+        error: "This email adress is already taken",
+      });
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
     req.body.password = hash;
