@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   totalTimeSpend: { type: Number, default: 0 },
   role: { type: String, enum: ["admin", "user"], default: "user" },
+  profilePicture: String,
   tasks: [
     {
       _id: {
