@@ -12,8 +12,10 @@ const {
   updateUserPassword,
   updateUserTimeSpend,
   updateUserInformations,
+  uploadUserPicture,
 } = require("./users.controller");
 const { authentification } = require("../middlewares/authentification");
+const upload = require("../middlewares/mutlerMiddleware");
 
 const router = express.Router();
 
@@ -32,6 +34,10 @@ router
     validateUserUpdateInformations,
     updateUserInformations
   );
+
+router
+  .route("/upload")
+  .post(authentification, upload.single("profilePicture"), uploadUserPicture);
 
 router
   .route("/user/updatepassword")

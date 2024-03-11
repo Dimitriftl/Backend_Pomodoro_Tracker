@@ -2,7 +2,6 @@ const userModel = require("./users.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
-
 module.exports = {
   async signUp(req: any, res: any) {
     const { password, email } = req.body;
@@ -66,6 +65,7 @@ module.exports = {
         name: user.name,
         role: user.role,
         totalTimeSpend: user.totalTimeSpend,
+        profilePicture: user.profilePicture,
       },
       tasks: user.tasks.filter((task: any) => task.status !== "deleted"),
     };
@@ -161,6 +161,25 @@ module.exports = {
       return res
         .status(200)
         .json({ ok: true, data: { totalTimeSpend: user.totalTimeSpend } });
+    } catch (error) {
+      return res.status(500).json({ ok: false, data: error });
+    }
+  },
+
+  async uploadUserPicture(req: any, res: any) {
+    const { id } = req.user;
+    const { filename } = req.file;
+    console.log(filename);
+
+    try {
+      const user = await userModel.findByIdAndUpdate(
+        id,
+        { $set: { profilePicture: filename } },
+        { new: true }
+      );
+      return res
+        .status(200)
+        .json({ ok: true, data: { profilePicture: user.profilePicture } });
     } catch (error) {
       return res.status(500).json({ ok: false, data: error });
     }
