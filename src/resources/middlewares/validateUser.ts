@@ -55,6 +55,8 @@ const validateUserUpdateInformations = (req: any, res: any, next: any) => {
   const schema = Joi.object({
     name: Joi.string().regex(new RegExp("^[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+$")),
     email: Joi.string().email(),
+  }).messages({
+    "string.pattern.base": `Your name can only have letters`,
   });
   const { error } = schema.validate(req.body);
   if (error) {

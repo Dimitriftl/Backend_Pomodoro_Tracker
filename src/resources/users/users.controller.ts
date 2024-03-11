@@ -6,7 +6,7 @@ const Joi = require("joi");
 module.exports = {
   async signUp(req: any, res: any) {
     const { password, email } = req.body;
-    const userExist = userModel.findOne({ email: email });
+    const userExist = await userModel.findOne({ email: email });
 
     if (userExist) {
       return res.status(400).json({
@@ -75,6 +75,7 @@ module.exports = {
 
   async deleteUser(req: any, res: any) {
     const { id } = req.user;
+
     try {
       const user = await userModel.findByIdAndDelete(id);
       return res.status(200).json({ ok: true, data: user });
