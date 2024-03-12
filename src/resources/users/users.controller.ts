@@ -16,6 +16,7 @@ module.exports = {
 
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
+
     req.body.password = hash;
     try {
       // create a user in the database with user model
@@ -169,7 +170,6 @@ module.exports = {
   async uploadUserPicture(req: any, res: any) {
     const { id } = req.user;
     const { filename } = req.file;
-    console.log(filename);
 
     try {
       const user = await userModel.findByIdAndUpdate(

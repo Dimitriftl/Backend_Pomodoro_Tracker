@@ -1,16 +1,15 @@
-const express = require('express');
-const { initializeRoutes } = require('./utils/initializeRoutes');
+const express = require("express");
+const { initializeRoutes } = require("./utils/initializeRoutes");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
-require('./db/connect')();
+require("./db/connect")(); // conect to mango db
 
-initializeRoutes(app)
-
+initializeRoutes(app);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.clear();
-    console.log(`Listening on port ${port}`)
+  console.clear();
+  console.log(`Listening on port ${port}`);
 });

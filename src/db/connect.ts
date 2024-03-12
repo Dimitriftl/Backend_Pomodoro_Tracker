@@ -6,8 +6,6 @@ module.exports = async () => {
   try {
     await mongoose.connect(uri, {
       dbName: "Pomodoro_tracker",
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     });
     console.log("Connected to DB");
   } catch (error) {
