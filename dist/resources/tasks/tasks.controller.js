@@ -70,8 +70,12 @@ module.exports = {
                 { $set: { "tasks.$": req.body } }, 
                 // return the updated document
                 { new: true });
-                console.log("user model => ", updatedTask);
-                res.status(200).json({ ok: true, message: "task updated successfully" });
+                const taskUpdated = updatedTask.tasks.find((task) => task._id == _id);
+                res.status(200).json({
+                    ok: true,
+                    message: "task updated successfully",
+                    data: taskUpdated,
+                });
             }
             catch (error) {
                 console.error(error);
@@ -79,9 +83,68 @@ module.exports = {
             }
         });
     },
+    updateNumberOfPomodoroAndTimeSpend(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { _id, numberOfPomodoroDone, timeSpend } = req.body;
+            const { id } = req.user;
+            try {
+                const taskToUpdate = yield userModel.findOneAndUpdate(
+                // filter all tasks of the user with the id and the task ID
+                { _id: id, "tasks._id": _id }, 
+                // update the task with the new data
+                // .$ is the positional operator, it will update the first element that matches the query
+                {
+                    $set: {
+                        "tasks.$.numberOfPomodoroDone": numberOfPomodoroDone,
+                        "tasks.$.timeSpend": timeSpend,
+                    },
+                }, 
+                // return the updated document
+                { new: true });
+                const taskUpdated = taskToUpdate.tasks.find((task) => task._id == _id);
+                res.status(200).json({
+                    ok: true,
+                    message: "number of pomodoro done updated successfully",
+                    data: taskUpdated,
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res
+                    .status(500)
+                    .send("Something went wront on number pomodoro done update.");
+            }
+        });
+    },
+    updateTimeSpend(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { _id, timeSpend } = req.body;
+            const { id } = req.user;
+            try {
+                const taskToUpdate = yield userModel.findOneAndUpdate(
+                // filter all tasks of the user with the id and the task ID
+                { _id: id, "tasks._id": _id }, 
+                // update the task with the new data
+                // .$ is the positional operator, it will update the first element that matches the query
+                { $set: { "tasks.$.timeSpend": timeSpend } }, 
+                // return the updated document
+                { new: true });
+                const taskUpdated = taskToUpdate.tasks.find((task) => task._id == _id);
+                res.status(200).json({
+                    ok: true,
+                    message: "time spend updated successfully",
+                    data: taskUpdated,
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send("Something went wront on time spend update.");
+            }
+        });
+    },
     deleteTask(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { _id } = req.body;
+            const _id = req.params.id;
             const { id } = req.user;
             try {
                 const deleted = yield userModel.findOneAndUpdate(
@@ -98,6 +161,28 @@ module.exports = {
             catch (error) {
                 console.error(error);
                 res.status(500).send("Erreur lors de la suppression de la tâche.");
+            }
+        });
+    },
+    gaveUpTask(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const _id = req.body._id;
+            const { id } = req.user;
+            try {
+                const gaveUp = yield userModel.findOneAndUpdate(
+                // filter all tasks of the user with the id and the task ID
+                { _id: id, "tasks._id": _id }, 
+                // update the task with the new data
+                // .$ is the positional operator, it will update the first element that matches the query
+                { $set: { "tasks.$.status": "gaveUp" } }, 
+                // return the updated document
+                { new: true });
+                console.log("updatedUser => ", gaveUp);
+                res.status(200).json({ ok: true, message: "task gave up successfully" });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).send("Erreur lors de l'abandon de la tâche.");
             }
         });
     },

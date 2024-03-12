@@ -15,8 +15,6 @@ module.exports = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose.connect(uri, {
             dbName: "Pomodoro_tracker",
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
         });
         console.log("Connected to DB");
     }
