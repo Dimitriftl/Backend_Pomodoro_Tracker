@@ -2,4 +2,3 @@ node_modules
 .env
 public/images
 dist
-dist-ssr

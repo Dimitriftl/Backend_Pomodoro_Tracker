@@ -1,4 +1,3 @@
-const taskModel = require("./tasks.model");
 const userModel = require("../users/users.model");
 const { v4: uuidv4 } = require("uuid");
 
