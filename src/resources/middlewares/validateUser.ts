@@ -21,7 +21,6 @@ const validateUser = (req: any, res: any, next: any) => {
       .required(),
 
     confirmedPassword: Joi.string(),
-    role: Joi.string().valid("admin", "user").required(),
   });
   const { error } = schema.validate(req.body);
   if (error) {

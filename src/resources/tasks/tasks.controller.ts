@@ -1,5 +1,4 @@
 const userModel = require("../users/users.model");
-const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   async createTask(req: any, res: any) {
