@@ -19,8 +19,6 @@ const validateUser = (req: any, res: any, next: any) => {
       )
       .messages(errorMessage)
       .required(),
-
-    confirmedPassword: Joi.string(),
   });
   const { error } = schema.validate(req.body);
   if (error) {
